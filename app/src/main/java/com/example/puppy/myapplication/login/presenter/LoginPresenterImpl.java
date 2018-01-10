@@ -5,8 +5,6 @@ import com.example.puppy.myapplication.login.view.LoginView;
 import com.example.puppy.myapplication.service.ApiInterface;
 import com.example.puppy.myapplication.service.ApiUrl;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,7 +27,12 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public void validateCredentials(String username, String password) {
         loginView.showProgress();
-        LoginMethod(username,password);
+        if(username.length()>5 && password.length()>5)
+          LoginMethod(username,password);
+        else {
+            loginView.hideProgress();
+            loginView.setUsernameError();
+        }
     }
 
     @Override
@@ -37,6 +40,11 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     }
 
+    /**
+     * api call to validate the creditianls
+     * @param username
+     * @param password
+     */
     public void LoginMethod(String username, String password) {
         Call<LoginModel> call =apiService.getList();
         call.enqueue(new Callback<LoginModel>() {
